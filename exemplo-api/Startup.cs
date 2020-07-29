@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace exemplo_api
 {
@@ -25,9 +26,16 @@ namespace exemplo_api
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            //services.AddContexto<DataContext>(Configuration.GetConnectionString("InputsContext"), "SCA.Service.Inputs");
             services.AddScoped<DataContext, DataContext>();
             services.AddControllers();
+
+            services.AddSwaggerGen(c =>
+            {        
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SCM.Cidadao", Version = "v1", });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,11 +49,20 @@ namespace exemplo_api
             app.UseRouting();
 
             app.UseAuthorization();
-
+                        
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.RoutePrefix = "swagger";
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            });
+
         }
     }
 }

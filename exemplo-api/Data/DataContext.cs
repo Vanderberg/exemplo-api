@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using exemplo_api.Models;
+﻿using exemplo_api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace exemplo_api.Data
@@ -15,7 +11,7 @@ namespace exemplo_api.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder.UseMySql("server=127.0.0.1;userid=root;password=456852;database=SGM_Cidadao"));
+            base.OnConfiguring(optionsBuilder.UseMySql("server=127.0.0.1;userid=root;password=456852;database=SGM_Cidadao"));                        
         }
     }
 }

@@ -31,18 +31,6 @@ namespace exemplo_api.Controllers
             return product;
         }
 
-        [HttpGet]
-        [Route("categorues/{id}")]
-        public async Task<ActionResult<List<Product>>> GetByCategory([FromServices] DataContext context, int id)
-        {
-            var products = await context.Products
-                .Include(x => x.Category)
-                .AsNoTracking()
-                .Where(x => x.CategoryId == id)
-                .ToListAsync();
-            return products;
-        }
-
         [HttpPost]
         [Route("")]
         public async Task<ActionResult<Product>> Post(
@@ -52,6 +40,36 @@ namespace exemplo_api.Controllers
             if (ModelState.IsValid)
             {
                 context.Products.Add(model);
+                await context.SaveChangesAsync();
+                return model;
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        [HttpDelete]
+        [Route("id")]
+        public async Task<ActionResult<Product>> Delete([FromServices] DataContext context, int id)
+        {
+            var product = await context.Products
+                .FirstOrDefaultAsync(x => x.Id == id);
+            context.Remove(product);
+            await context.SaveChangesAsync();
+
+            return product;
+        }
+
+        [HttpPut]
+        [Route("id")]
+        public async Task<ActionResult<Product>> Put(
+                    [FromServices] DataContext context,
+                    [FromBody] Product model, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                context.Products.Update(model);
                 await context.SaveChangesAsync();
                 return model;
             }
